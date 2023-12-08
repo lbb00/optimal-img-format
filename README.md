@@ -13,7 +13,7 @@
 ### install
 
 ```bash
-npm install img-format-optimal
+npm install optimal-img-format
 ```
 
 ### Browser
@@ -40,4 +40,4 @@ If you have any suggestions for this project or discover a bug, please raise an 
 
 ## License
 
-![MIT License](./LICENSE)
+![UNLICENSE](./LICENSE)
