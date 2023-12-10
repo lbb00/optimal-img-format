@@ -44,4 +44,4 @@ If you have any suggestions for this project or discover a bug, please raise an 
 
 ## License
 
-![UNLICENSE](./LICENSE)
+[UNLICENSE](./LICENSE)
