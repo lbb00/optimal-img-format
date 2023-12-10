@@ -24,9 +24,9 @@
   "scripts": {
     "build": "vite build",
     "format": "biome format --write ./",
-    "prepublish": "npm run build && npm run test",
+    "prepublish": "npm run test",
     "test": "npm run test:export && npm run test:unit",
-    "test:export": "publint",
+    "test:export": "npm run build && publint",
     "test:unit": "vitest run --coverage --browser.name=chrome --browser.headless --dir ./test"
   },
   "devDependencies": {
