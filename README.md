@@ -8,6 +8,8 @@
 
 > Get optimal image format on the browser or server.
 
+[Online demo](https://lbb00-OptimalImgFormatDemo.web.val.run)
+
 ## Usage
 
 ### Install
