@@ -10,7 +10,7 @@
 
 ## Usage
 
-### install
+### Install
 
 ```bash
 npm install optimal-img-format
@@ -23,6 +23,10 @@ import { getOptimalImgFormatOnBrowser } from 'optimal-img-format'
 
 const format = await getOptimalImgFormatOnBrowser(['avif', 'webp'])
 ```
+
+Detecting browser supports from:
+
+- <https://avif.io/blog/tutorials/css/#avifsupportdetectionscript>
 
 ### Server
 
