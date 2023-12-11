@@ -4,6 +4,9 @@ devDependencies:
   '@biomejs/biome':
     specifier: 1.4.1
     version: 1.4.1
+  '@types/dom-webcodecs':
+    specifier: ^0.1.11
+    version: 0.1.11
   '@types/node':
     specifier: ^20.10.4
     version: 20.10.4
@@ -825,6 +828,10 @@ packages:
 
   /@types/argparse@1.0.38:
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
+    dev: true
+
+  /@types/dom-webcodecs@0.1.11:
+    resolution: {integrity: sha512-yPEZ3z7EohrmOxbk/QTAa0yonMFkNkjnVXqbGb7D4rMr+F1dGQ8ZUFxXkyLLJuiICPejZ0AZE9Rrk9wUCczx4A==}
     dev: true
 
   /@types/estree@1.0.5:

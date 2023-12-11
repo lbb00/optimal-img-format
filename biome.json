@@ -11,7 +11,9 @@
 	},
 	"javascript": {
 		"formatter": {
-			"semicolons": "asNeeded"
+			"semicolons": "asNeeded",
+			"quoteStyle": "single",
+			"lineWidth": 80
 		}
 	}
 }
