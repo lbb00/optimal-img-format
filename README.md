@@ -28,6 +28,7 @@ const format = await getOptimalImgFormatOnBrowser(['avif', 'webp'])
 
 Detecting browser supports from:
 
+- [ImageDecoder.isTypeSupported](https://developer.mozilla.org/en-US/docs/Web/API/ImageDecoder/isTypeSupported_static)
 - <https://avif.io/blog/tutorials/css/#avifsupportdetectionscript>
 
 ### Server
