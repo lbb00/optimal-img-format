@@ -1,17 +1,21 @@
 import type { ImgFormat } from './constants'
-import { OPTIMAL_FORMATS_DEFAULT, ImgFormatMIMETypes } from './constants'
+import {
+	getDataUrlFromBase64,
+	AVIF_BASE64,
+	JXL_BASE64,
+	WEBP_BASE64,
+} from './imgs'
+import { OPTIMAL_FORMATS_DEFAULT } from './constants'
 
-const cachedSupportMap: Record<ImgFormat, boolean | undefined> = {
-	avif: undefined,
-	webp: undefined,
-}
-const loadImagePromiseMap: Record<string, Promise<HTMLImageElement>> = {}
-function loadImage(src: string, key: string) {
-	if (loadImagePromiseMap[key] === undefined) {
-		loadImagePromiseMap[key] = new Promise<HTMLImageElement>(
+const loadImagePromiseMap: Partial<
+	Record<ImgFormat, Promise<HTMLImageElement>>
+> = {}
+function loadImage(base64Src: string, format: ImgFormat) {
+	if (loadImagePromiseMap[format] === undefined) {
+		loadImagePromiseMap[format] = new Promise<HTMLImageElement>(
 			(resolve, reject) => {
 				const img = new Image()
-				img.src = src
+				img.src = getDataUrlFromBase64(base64Src, format)
 				img.onload = () => {
 					resolve(img)
 				}
@@ -20,76 +24,86 @@ function loadImage(src: string, key: string) {
 		)
 	}
 
-	return loadImagePromiseMap[key]
+	return loadImagePromiseMap[format] as Promise<HTMLImageElement>
 }
 
-export async function isSupportAVIF() {
-	if (cachedSupportMap.avif === undefined) {
+const cachedSupportMap: Partial<Record<ImgFormat, boolean | undefined>> = {}
+async function isSupportWithCacheMap(
+	format: ImgFormat,
+	imgBase64: string,
+	{ force = false } = {},
+) {
+	if (cachedSupportMap[format] === undefined || force) {
 		try {
-			await loadImage(
-				'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=',
-				'avif',
-			)
-			cachedSupportMap.avif = true
+			const img = await loadImage(imgBase64, format)
+			cachedSupportMap[format] = img.width > 0 && img.height > 0
 		} catch (e) {
-			cachedSupportMap.avif = false
+			cachedSupportMap[format] = false
 		}
 	}
-	return cachedSupportMap.avif
+	return cachedSupportMap[format] as boolean
 }
 
-export async function isSupportWebP() {
-	if (cachedSupportMap.webp === undefined) {
-		try {
-			const img = await loadImage(
-				'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==',
-				'webp',
-			)
-			cachedSupportMap.webp = img.width > 0 && img.height > 0
-		} catch (e) {
-			cachedSupportMap.webp = false
-		}
-	}
-
-	return cachedSupportMap.webp
+export async function isSupportAVIF({ force = false } = {}) {
+	return isSupportWithCacheMap('avif', AVIF_BASE64, {
+		force,
+	})
 }
 
-const formatSupportMap: Record<ImgFormat, () => Promise<boolean>> = {
+export async function isSupportWebP({ force = false } = {}) {
+	return isSupportWithCacheMap('webp', WEBP_BASE64, { force })
+}
+
+export async function isSupportJXL({ force = false } = {}) {
+	return isSupportWithCacheMap('jxl', JXL_BASE64, { force })
+}
+
+const formatSupportMap: Record<
+	ImgFormat,
+	(opts?: { force?: boolean }) => Promise<boolean>
+> = {
 	avif: isSupportAVIF,
 	webp: isSupportWebP,
+	jxl: isSupportJXL,
+}
+
+async function getOptimalImageFormatByCheckFeature(
+	formats: ImgFormat[],
+	{ force = false } = {},
+) {
+	const results = await Promise.all(
+		formats.map((format) =>
+			formatSupportMap[format]?.({
+				force,
+			}),
+		),
+	)
+	return formats[results.findIndex(Boolean)]
 }
 
 async function getOptimalImageFormatByImageDecoder(
 	optimalFormats: ImgFormat[],
-) {
+): Promise<ImgFormat | undefined> {
 	for (const format of optimalFormats) {
 		try {
-			if (await ImageDecoder.isTypeSupported(ImgFormatMIMETypes[format])) {
+			if (await ImageDecoder.isTypeSupported(`image/${format}`)) {
 				return format
 			}
 		} catch (e) {
-			// ignore
+			return undefined
 		}
 	}
 }
 
-async function getOptimalImageFormatByCheckFeature(
-	optimalFormats: ImgFormat[],
-) {
-	const results = await Promise.all(
-		optimalFormats.map((format) => formatSupportMap[format]?.()),
-	)
-	return optimalFormats[results.findIndex(Boolean)]
-}
-
 export function getOptimalImgFormatOnBrowser(
-	optimalFormats: ImgFormat[] = OPTIMAL_FORMATS_DEFAULT,
+	formats: ImgFormat[] = OPTIMAL_FORMATS_DEFAULT,
+	{ force = false } = {},
 ) {
 	if (
 		typeof ImageDecoder !== 'undefined' &&
 		typeof ImageDecoder.isTypeSupported === 'function'
 	) {
-		return getOptimalImageFormatByImageDecoder(optimalFormats)
+		return getOptimalImageFormatByImageDecoder(formats)
 	}
-	return getOptimalImageFormatByCheckFeature(optimalFormats)
+	return getOptimalImageFormatByCheckFeature(formats, { force })
 }
