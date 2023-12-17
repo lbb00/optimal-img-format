@@ -34,11 +34,24 @@ async function isSupportWithCacheMap(
 	{ force = false } = {},
 ) {
 	if (cachedSupportMap[format] === undefined || force) {
-		try {
-			const img = await loadImage(imgBase64, format)
-			cachedSupportMap[format] = img.width > 0 && img.height > 0
-		} catch (e) {
-			cachedSupportMap[format] = false
+		if (
+			typeof ImageDecoder !== 'undefined' &&
+			typeof ImageDecoder.isTypeSupported === 'function'
+		) {
+			try {
+				cachedSupportMap[format] = await ImageDecoder.isTypeSupported(
+					`image/${format}`,
+				)
+			} catch (e) {
+				cachedSupportMap[format] = false
+			}
+		} else {
+			try {
+				const img = await loadImage(imgBase64, format)
+				cachedSupportMap[format] = img.width > 0 && img.height > 0
+			} catch (e) {
+				cachedSupportMap[format] = false
+			}
 		}
 	}
 	return cachedSupportMap[format] as boolean
@@ -67,8 +80,8 @@ const formatSupportMap: Record<
 	jxl: isSupportJXL,
 }
 
-async function getOptimalImageFormatByCheckFeature(
-	formats: ImgFormat[],
+export async function getOptimalImgFormatOnBrowser(
+	formats: ImgFormat[] = OPTIMAL_FORMATS_DEFAULT,
 	{ force = false } = {},
 ) {
 	const results = await Promise.all(
@@ -79,31 +92,4 @@ async function getOptimalImageFormatByCheckFeature(
 		),
 	)
 	return formats[results.findIndex(Boolean)]
-}
-
-async function getOptimalImageFormatByImageDecoder(
-	optimalFormats: ImgFormat[],
-): Promise<ImgFormat | undefined> {
-	for (const format of optimalFormats) {
-		try {
-			if (await ImageDecoder.isTypeSupported(`image/${format}`)) {
-				return format
-			}
-		} catch (e) {
-			return undefined
-		}
-	}
-}
-
-export function getOptimalImgFormatOnBrowser(
-	formats: ImgFormat[] = OPTIMAL_FORMATS_DEFAULT,
-	{ force = false } = {},
-) {
-	if (
-		typeof ImageDecoder !== 'undefined' &&
-		typeof ImageDecoder.isTypeSupported === 'function'
-	) {
-		return getOptimalImageFormatByImageDecoder(formats)
-	}
-	return getOptimalImageFormatByCheckFeature(formats, { force })
 }
