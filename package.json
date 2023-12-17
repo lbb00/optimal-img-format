@@ -27,7 +27,7 @@
     "prepublish": "npm run test",
     "test": "npm run test:export && npm run test:unit",
     "test:export": "npm run build && publint",
-    "test:unit": "vitest run --coverage --browser.name=chrome --browser.headless --dir ./test"
+    "test:unit": "vitest run --coverage --dir ./test"
   },
   "devDependencies": {
     "@biomejs/biome": "1.4.1",
@@ -48,9 +48,11 @@
     "url": "git+https://github.com/lbb00/optimal-img-format.git"
   },
   "keywords": [
-    "image format",
+    "detect image format",
+    "is support",
     "webp",
-    "avif"
+    "avif",
+    "jpeg"
   ],
   "license": "UNLICENSE (HTTP://UNLICENSE.ORG/)"
 }

@@ -1,5 +1,5 @@
 import type { ImgFormat } from './constants'
-import { OPTIMAL_FORMATS_DEFAULT, ImgFormatMIMETypes } from './constants'
+import { OPTIMAL_FORMATS_DEFAULT } from './constants'
 
 export function getOptimalImgFormatByAccept(
 	accept?: string,
@@ -10,7 +10,7 @@ export function getOptimalImgFormatByAccept(
 	}
 
 	return optimalFormats.find((format) => {
-		if (accept.includes(ImgFormatMIMETypes[format])) {
+		if (accept.includes(`image/${format}`)) {
 			return true
 		}
 		return false
