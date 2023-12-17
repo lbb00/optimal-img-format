@@ -103,7 +103,7 @@ export function getOptimalImgFormatOnBrowser(
 		typeof ImageDecoder !== 'undefined' &&
 		typeof ImageDecoder.isTypeSupported === 'function'
 	) {
-		return getOptimalImageFormatByImageDecoder(formats, { force })
+		return getOptimalImageFormatByImageDecoder(formats)
 	}
 	return getOptimalImageFormatByCheckFeature(formats, { force })
 }

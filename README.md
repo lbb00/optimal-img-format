@@ -8,8 +8,9 @@
 [![Npm download](https://img.shields.io/npm/dw/optimal-img-format.svg)](https://www.npmjs.com/package/optimal-img-format)
 
 > Get optimal image format on the browser or server.
->
-> Support for AVIF, WebP and JPEG XL.
+
+- Support for AVIF, WebP and JPEG XL
+- Zero dependency
 
 [Online demo](https://lbb00-OptimalImgFormatDemo.web.val.run)
 

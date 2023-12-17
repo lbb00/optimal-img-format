@@ -41,7 +41,7 @@ jobs:
       - name: Install global dependencies
         run: pnpm i -g @antfu/ni
       - name: Install Dependencies
-        run: nci
+        run: npm pkg delete scripts.prepare && nci
       - name: Test
         run: nr test
       - name: Upload coverage
