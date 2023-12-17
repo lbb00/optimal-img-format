@@ -1,7 +1,7 @@
 {
   "name": "optimal-img-format",
   "description": "Get optimal image format on the browser or server.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "exports": {
     ".": {
       "require": {

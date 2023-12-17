@@ -11,6 +11,7 @@
 
 - Support for AVIF, WebP and JPEG XL
 - Zero dependency
+- Fast, using promise singleton and cache for detecting
 
 [Online demo](https://lbb00-OptimalImgFormatDemo.web.val.run)
 
@@ -21,6 +22,14 @@
 ```bash
 npm install optimal-img-format
 ```
+
+### Formats
+
+Formats refer to the subtypes of the MIME type `images/*`.
+
+- jxl
+- avif
+- webp
 
 ### Browser
 
@@ -51,6 +60,10 @@ const format =
   getOptimalImgFormatByAccept(request.headers.accept, ["avif", "webp"]) ||
   getOptimalImgFormatByAgent(request.headers.agent, ["avif", "webp"]);
 ```
+
+## Changelog
+
+[CHANGELOG](./CHANGELOG.md)
 
 ## Contributions
 
