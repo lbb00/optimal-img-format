@@ -1,5 +1,11 @@
 # optimal-img-format
 
+## 1.4.0
+
+### Minor Changes
+
+- [#6](https://github.com/lbb00/optimal-img-format/pull/6) [`456e823`](https://github.com/lbb00/optimal-img-format/commit/456e823cee5aa914f645b77ca78104997ae3c437) Thanks [@lbb00](https://github.com/lbb00)! - Add cache for ImageDecoder.isTypeSupported
+
 ## 1.3.1
 
 ### Patch Changes
