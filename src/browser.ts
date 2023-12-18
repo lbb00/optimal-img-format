@@ -27,34 +27,40 @@ function loadImage(base64Src: string, format: ImgFormat) {
 	return loadImagePromiseMap[format] as Promise<HTMLImageElement>
 }
 
-const cachedSupportMap: Partial<Record<ImgFormat, boolean | undefined>> = {}
+const isTypeSupportedPromiseMap: Partial<
+	Record<ImgFormat, boolean | undefined>
+> = {}
+async function isTypeSupported(format: ImgFormat) {
+	if (isTypeSupportedPromiseMap[format] === undefined) {
+		isTypeSupportedPromiseMap[format] = await ImageDecoder.isTypeSupported(
+			`image/${format}`,
+		)
+	}
+	return isTypeSupportedPromiseMap[format] as boolean
+}
+
+const supportCacheMap: Partial<Record<ImgFormat, boolean | undefined>> = {}
 async function isSupportWithCacheMap(
 	format: ImgFormat,
 	imgBase64: string,
 	{ force = false } = {},
 ) {
-	if (cachedSupportMap[format] === undefined || force) {
-		if (
-			typeof ImageDecoder !== 'undefined' &&
-			typeof ImageDecoder.isTypeSupported === 'function'
-		) {
-			try {
-				cachedSupportMap[format] = await ImageDecoder.isTypeSupported(
-					`image/${format}`,
-				)
-			} catch (e) {
-				cachedSupportMap[format] = false
-			}
-		} else {
-			try {
+	if (supportCacheMap[format] === undefined || force) {
+		try {
+			if (
+				typeof ImageDecoder !== 'undefined' &&
+				typeof ImageDecoder.isTypeSupported === 'function'
+			) {
+				supportCacheMap[format] = await isTypeSupported(format)
+			} else {
 				const img = await loadImage(imgBase64, format)
-				cachedSupportMap[format] = img.width > 0 && img.height > 0
-			} catch (e) {
-				cachedSupportMap[format] = false
+				supportCacheMap[format] = img.width > 0 && img.height > 0
 			}
+		} catch (e) {
+			supportCacheMap[format] = false
 		}
 	}
-	return cachedSupportMap[format] as boolean
+	return supportCacheMap[format] as boolean
 }
 
 export async function isSupportAVIF({ force = false } = {}) {

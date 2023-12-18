@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/lbb00/optimal-img-format.svg)](https://github.com/lbb00/optimal-img-format/blob/master/LICENSE)
 [![Npm download](https://img.shields.io/npm/dw/optimal-img-format.svg)](https://www.npmjs.com/package/optimal-img-format)
 
-> Get optimal image format on the browser or server.
+> Get optimal image format on the browser and server.
 
 - Support for AVIF, WebP and JPEG XL
 - Zero dependency
@@ -43,7 +43,7 @@ const format = await getOptimalImgFormatOnBrowser(["avif", "webp"]);
 const formatWebp = await isSupportWebP();
 ```
 
-Detecting browser supports from:
+Detecting browser supports by:
 
 - [ImageDecoder.isTypeSupported](https://developer.mozilla.org/en-US/docs/Web/API/ImageDecoder/isTypeSupported_static)
 - <https://avif.io/blog/tutorials/css/#avifsupportdetectionscript>
