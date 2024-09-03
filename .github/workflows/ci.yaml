@@ -20,13 +20,13 @@ jobs:
         node-version: [22]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: ".node-version"
-          cache: "npm"
       - uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: 120
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          cache: 'pnpm'
       - uses: pnpm/action-setup@v2
       - name: Install global dependencies
         run: pnpm i -g @antfu/ni
