@@ -15,9 +15,6 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22]
     steps:
       - uses: actions/checkout@v4
       - uses: browser-actions/setup-chrome@v1
@@ -26,7 +23,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".node-version"
-          cache: 'pnpm'
       - uses: pnpm/action-setup@v2
       - name: Install global dependencies
         run: pnpm i -g @antfu/ni
