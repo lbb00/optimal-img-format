@@ -17,15 +17,19 @@ export function getOptimalImgFormatByAccept(
 	})
 }
 
-const ImgFormatAgentMap = {
-	avif: {
-		safari: (version: number) => version > 16,
-		appleOS: (version: number) => version > 16,
-	},
-	webp: {
-		safari: (version: number) => version > 14,
-		appleOS: (version: number) => version > 14,
-	},
+const iosVersionSupport = {
+	webp: (version: number) => version >= 14,
+	avif: (version: number) => version >= 16,
+	jxl: (version: number) => version >= 17,
+}
+
+function checkIOSOptimalFormats(
+	version: number,
+	optimalFormats: ImgFormat[] = OPTIMAL_FORMATS_DEFAULT,
+) {
+	return optimalFormats.find((format) => {
+		return iosVersionSupport[format](version)
+	})
 }
 
 export function getOptimalImgFormatByAgent(
@@ -37,16 +41,12 @@ export function getOptimalImgFormatByAgent(
 	const safariVersionMatched = agent.match(/Version\/(\d+).*Safari/i)
 	if (safariVersionMatched) {
 		const safariVersion = safariVersionMatched[1]
-		return optimalFormats.find((format) => {
-			return ImgFormatAgentMap[format].safari(+safariVersion)
-		})
+		return checkIOSOptimalFormats(+safariVersion, optimalFormats)
 	}
 
 	const appleOSMatched = agent.match(/(iPhone OS) (\d+)/i)
 	if (appleOSMatched) {
 		const appleOSVersion = appleOSMatched[2]
-		return optimalFormats.find((format) => {
-			return ImgFormatAgentMap[format].appleOS(+appleOSVersion)
-		})
+		return checkIOSOptimalFormats(+appleOSVersion, optimalFormats)
 	}
 }

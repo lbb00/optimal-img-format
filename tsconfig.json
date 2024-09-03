@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "ESNext"],
-    "removeComments": true,
-    "sourceMap": false,
-    "strict": true,
-    "noImplicitAny": false,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "moduleResolution": "Node10"
-  },
-  "include": ["src", "typings", "test"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"lib": ["DOM", "ESNext"],
+		"removeComments": true,
+		"sourceMap": false,
+		"strict": true,
+		"noImplicitAny": false,
+		"baseUrl": ".",
+		"esModuleInterop": true,
+		"moduleResolution": "Node10"
+	},
+	"include": ["src", "typings", "test"]
 }
